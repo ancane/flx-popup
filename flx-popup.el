@@ -1,4 +1,4 @@
-;;; flx-popup --- flex mathing support for popup
+;;; flx-popup --- flex mathing support for popup.el
 ;; Version: 0.1
 ;; Package-Requires: ((cl-lib "0.3") (dash "2.12.1") (flx "0.6.1") (popup "0.5.3"))
 ;; This file is not part of GNU Emacs.
@@ -12,7 +12,11 @@
 
 (defcustom flx-popup-use-faces t
   "Use `flx-highlight-face' to indicate characters contributing to best score."
+  :type 'boolean
   :group 'popup)
+
+(defvar flx-popup-max-highlighted 15
+  "Indicates how many popup items will be propertized with `flx-highlight-face'")
 
 ;;;###autoload
 (defun flx-popup-match (query items)
@@ -54,10 +58,10 @@ ITEMS - popup menu items list"
     re))
 
 (defun flx-popup--decorate (things)
-  "Highlight imenu items matching search query.
+  "Highlight items matching search query.
 THINGS - (menu-item . score)."
   (if flx-popup-use-faces
-      (let ((decorate-count (min ido-max-prospects
+      (let ((decorate-count (min flx-popup-max-highlighted
                                  (length things))))
         (nconc
          (cl-loop for thing in things
